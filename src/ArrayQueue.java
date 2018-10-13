@@ -26,30 +26,32 @@ public class ArrayQueue<E> implements Queue<E> {
 
 	public E dequeue() {
 		if (isEmpty()) return null;
-		E etr = elements[first]; 
-
-		//... adjust whatever needs to be adjusted ...
-
-		// Check if number of available positions in the array exceed 3/4
-		// of its total length. If so, and if the current capacity is not
-		// less than 2*INITCAP, shrink the internal array to 1/2 of its
-		// current length (the capacity of the queue). 
-		if (elements.length >= 2*INITCAP && size < elements.length/4)
-			changeCapacity(elements.length/2); 
-		return etr; 
-	}
+		E etr = elements[first]; elements[first] = null;
+		first = (first + 1) % elements.length;
+		size--;
+		// adjust capacity if too many empty slots in the array, but never to a value < INITCAP
+		if (size <= elements.length/4 && elements.length > INITCAP)
+		changeCapacity(elements.length/2); // adjust capacity to 1/2 of current capacity
+		return etr;
+		}
+	
 
 	public void enqueue(E e) {
-		if (size == elements.length)   // check capacity, double it if needed
-			changeCapacity(2*size); 
+		if (size == elements.length) // adjust capacity if needed
+		changeCapacity(2*size);
+		elements[(first + size) % elements.length] = e; // place in first empty slot after last element
+		size++;
+		}
 
-		//... finish the implementation of this method ... 
-	}
-
-	private void changeCapacity(int newCapacity) { 
-		// PRE: newCapacity >= size
-
-		//... finish the implementation of this method ...
+	private void changeCapacity(int newCapacity) { // change capacity to newCapacity
+		E[] temp = (E[]) new Object[newCapacity];
+		for (int i=0; i<size; i++) { 
+		int itm = (first + i) % elements.length;
+		temp[i] = elements[itm];
+		elements[itm] = null;
+		}
+		elements = temp; 
+		first = 0;
 	}
 	@Override
 	public boolean addAll(Collection<? extends E> c) {

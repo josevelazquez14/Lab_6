@@ -48,15 +48,34 @@ public class SLLQueue<E> implements Queue<E> {
 		return first.getElement(); 
 	}
 	public E dequeue() {
+		
+		Node<E> nodeToReturn = this.first;
+		
 		if (isEmpty()) return null;
-		return null;		
+		else {
+            // Removing the second last element from the list
+            if (this.last == null) {
+                this.first = null;
+            } else {
+                // Set new head to next node, regardless of whether
+                // it is a null pointer
+                this.first = this.first.getNext();
+            }
+            // Lastly, decrement size of the queue
+            this.size--;
+        }
+        return nodeToReturn.getElement();
+				
 		 
 	}
 	public void enqueue(E e) {
 		if (size == 0) 
 			first = last = new Node<E>(e);
 		else { 
-			
+			Node<E> previousTail = this.last;
+            Node<E> newTail = new Node<E>(e, null);
+            previousTail.setNext(newTail);
+            this.last = newTail;
 		}
 		size++; 
 	}
@@ -100,11 +119,7 @@ public class SLLQueue<E> implements Queue<E> {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	@Override
-	public Object[] toArray() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 	@Override
 	public <T> T[] toArray(T[] arg0) {
 		// TODO Auto-generated method stub
@@ -137,6 +152,11 @@ public class SLLQueue<E> implements Queue<E> {
 	}
 	@Override
 	public E remove() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Object[] toArray() {
 		// TODO Auto-generated method stub
 		return null;
 	}
